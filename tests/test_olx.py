@@ -83,6 +83,14 @@ def test_parse_html_extracts_best_effort_fields():
     assert "Cluj-Napoca" in first.location
 
 
+def test_parse_html_title_ignores_promoted_badge():
+    # The first card is "promoted": a PROMOVAT badge anchor precedes the title.
+    # The title must come from the heading, not the badge.
+    first = olx.parse_listings_html(load("search.html"))[0]
+    assert first.title == "Honda CBR 600RR"
+    assert "PROMOVAT" not in first.title
+
+
 def test_parse_html_tolerates_missing_fields():
     listings = olx.parse_listings_html(load("search.html"))
     third = listings[2]  # card with no price/location

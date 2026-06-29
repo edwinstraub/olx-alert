@@ -108,13 +108,21 @@ def parse_listings_html(html: str) -> list[Listing]:
         listings.append(
             Listing(
                 id=listing_id,
-                title=_text(anchor),
+                title=_card_title(card) or _text(anchor),
                 price=_card_text(card, "ad-price"),
                 location=_card_text(card, "location-date"),
                 url=anchor["href"],
             )
         )
     return listings
+
+
+def _card_title(card) -> str:
+    # The title is the card's heading. Taking it from the heading (rather than
+    # an anchor's text) avoids picking up the "PROMOVAT" badge on promoted cards.
+    if card is None:
+        return ""
+    return _text(card.find(["h4", "h5", "h6"]))
 
 
 def _enclosing_card(anchor):

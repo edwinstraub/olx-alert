@@ -3,7 +3,7 @@
 # Paste an OLX.ro search-results URL built with OLX's own filter UI
 # (motorcycle subcategory, hometown, price range, keywords — anything OLX
 # supports). The app fetches this URL on each run.
-search_url: "https://www.olx.ro/auto-masini-moto-ambarcatiuni/motociclete-scutere-atv/"
+search_url: "https://www.olx.ro/auto-masini-moto-ambarcatiuni/motociclete/satu-mare_58409/?currency=EUR&search%5Border%5D=created_at:desc"
 
 # Where notification emails are sent. Non-secret; SMTP credentials live in
 # GitHub Secrets (SMTP_USER / SMTP_PASS), never here.
