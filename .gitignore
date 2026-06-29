@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+.venv.stale.*/
+
+# Local environment / secrets — never commit SMTP credentials
+.env
+
+# NOTE: state/seen.json is intentionally NOT ignored. It is committed by the
+# scheduled workflow so seen-listing state persists across runs.

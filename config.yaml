@@ -1,0 +1,17 @@
+# OLX.ro motorcycle alert — non-secret configuration (committed).
+#
+# Paste an OLX.ro search-results URL built with OLX's own filter UI
+# (motorcycle subcategory, hometown, price range, keywords — anything OLX
+# supports). The app fetches this URL on each run.
+search_url: "https://www.olx.ro/auto-masini-moto-ambarcatiuni/motociclete-scutere-atv/"
+
+# Where notification emails are sent. Non-secret; SMTP credentials live in
+# GitHub Secrets (SMTP_USER / SMTP_PASS), never here.
+recipient_email: "straubedwin@gmail.com"
+
+# Safety cap: never notify about more than this many listings in a single run
+# (guards against a flood if the diff is unexpectedly large).
+max_listings_per_run: 20
+
+# Which notifier implementation to use. Currently: "email".
+notifier: email

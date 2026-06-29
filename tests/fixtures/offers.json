@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "id": 987654321,
+      "url": "https://www.olx.ro/d/oferta/honda-cbr-600rr-IDkHuzM.html",
+      "title": "Honda CBR 600RR",
+      "created_time": "2026-06-29T10:15:00+03:00",
+      "location": {
+        "city": { "name": "Cluj-Napoca" },
+        "region": { "name": "Cluj" }
+      },
+      "params": [
+        {
+          "key": "price",
+          "value": { "value": 5500, "currency": "EUR", "label": "5 500 €", "negotiable": true }
+        },
+        { "key": "motor_capacity", "value": { "label": "600 cm3" } }
+      ]
+    },
+    {
+      "id": 987654322,
+      "url": "https://www.olx.ro/d/oferta/ktm-duke-125-motocicleta-a1-IDkAZhr.html",
+      "title": "KTM Duke 125 motocicleta A1",
+      "created_time": "2026-06-29T09:02:00+03:00",
+      "location": {
+        "city": { "name": "Bucuresti" },
+        "region": { "name": "Bucuresti" }
+      },
+      "params": [
+        {
+          "key": "price",
+          "value": { "value": 3200, "currency": "EUR", "label": "3 200 €", "negotiable": false }
+        }
+      ]
+    },
+    {
+      "id": 987654323,
+      "url": "https://www.olx.ro/d/oferta/harley-davidson-dyna-super-glide-custom-IDkFr25.html",
+      "title": "Harley Davidson Dyna Super Glide Custom",
+      "created_time": null,
+      "location": {},
+      "params": []
+    }
+  ],
+  "metadata": { "total_elements": 3 }
+}
