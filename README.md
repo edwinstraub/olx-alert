@@ -71,7 +71,7 @@ Frequency is controlled in exactly one place — the `cron` expression in
 `.github/workflows/check.yml`:
 
 ```yaml
-- cron: "*/15 * * * *"   # every 15 minutes (default)
+- cron: "0 */4 * * *"   # every 4 hours (default)
 ```
 
 **Scheduling caveat:** GitHub Actions scheduled jobs have a ~5-minute minimum

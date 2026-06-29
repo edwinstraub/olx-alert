@@ -109,5 +109,4 @@ without it.
 
 - Exact OLX JSON API endpoint/parameters to derive from a pasted search URL —
   to be pinned down against live samples during implementation.
-- Default cron cadence (design suggests every 15 minutes) — confirm with the
-  user before enabling.
+- ~~Default cron cadence~~ — resolved: every 4 hours (`0 */4 * * *`).

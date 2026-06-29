@@ -43,7 +43,7 @@ marked failed and retried next run.
 
 The system SHALL run on a cron schedule defined in
 `.github/workflows/check.yml`, which SHALL be the single place to change check
-frequency (default suggestion: every 15 minutes). After a successful run that
+frequency (default: every 4 hours). After a successful run that
 changes state, the workflow SHALL commit the updated `state/seen.json` back to
 the repository.
 

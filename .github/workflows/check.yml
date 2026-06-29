@@ -2,10 +2,10 @@ name: OLX motorcycle alert
 
 on:
   schedule:
-    # Single source of truth for check frequency. Default: every 15 minutes.
+    # Single source of truth for check frequency. Default: every 4 hours.
     # Note: GitHub Actions cron has ~5-minute minimum granularity and may be
     # delayed several minutes under load — acceptable for marketplace polling.
-    - cron: "*/15 * * * *"
+    - cron: "0 */4 * * *"
   workflow_dispatch: {}
 
 # Serialize runs so two jobs never race on state/seen.json.

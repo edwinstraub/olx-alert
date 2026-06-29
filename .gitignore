@@ -8,8 +8,11 @@ __pycache__/
 venv/
 .venv.stale.*/
 
-# Local environment / secrets — never commit SMTP credentials
+# Local environment / secrets — never commit credentials
 .env
+github-access-token.txt
+*token*.txt
+*.pem
 
 # NOTE: state/seen.json is intentionally NOT ignored. It is committed by the
 # scheduled workflow so seen-listing state persists across runs.
