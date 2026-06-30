@@ -15,7 +15,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # OLX listing URLs end in ``-ID<alphanumeric>.html``.
-_ID_RE = re.compile(r"-ID([0-9]+)\.html")
+_ID_RE = re.compile(r"-ID([A-Za-z0-9]+)\.html")
 
 # OLX returns 403 for unfamiliar clients; present a browser-like User-Agent.
 _HEADERS = {
