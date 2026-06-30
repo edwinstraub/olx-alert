@@ -42,7 +42,8 @@ secret. Confirmed current input surface (v1 GA):
 - `prompt:` — the fixed instruction (beta's `direct_prompt`, now renamed).
 - `anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}` — the API key.
 - `claude_args:` — model/turn/tool flags, e.g.
-  `--model claude-sonnet-4-6 --max-turns 8`.
+  `--model claude-sonnet-4-6 --max-turns 30` (30 chosen over 8 so the
+  diagnose→fix→pytest→branch→PR sequence isn't cut off mid-run).
 - Headless mode is **auto-detected** from the trigger event — a `workflow_run`
   trigger plus a fixed `prompt` runs without any `mode:` input (removed in v1).
 - *Alternative considered:* an out-of-repo scheduled cloud agent polling for failed

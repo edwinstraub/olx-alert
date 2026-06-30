@@ -1,0 +1,111 @@
+name: Pipeline watchdog
+
+# Reacts when the "OLX motorcycle alert" pipeline fails. Runs Claude to diagnose
+# the failure from the run logs, and — for a real code bug — to make a minimal,
+# pytest-verified fix and open a review-only PR that notifies the repo owner.
+# Transient failures (network/timeout/5xx) are left for the next scheduled run to
+# self-heal: no PR, no notification.
+on:
+  workflow_run:
+    workflows: ["OLX motorcycle alert"]
+    types: [completed]
+
+# Read other workflows' logs, create the fix branch, and open the PR.
+permissions:
+  actions: read
+  contents: write
+  pull-requests: write
+
+jobs:
+  diagnose:
+    # Only act on failures. `workflow_run.conclusion` reflects the upstream
+    # pipeline's result — NOT `failure()`, which would reflect this job's own steps.
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        # requirements-dev.txt pulls in requirements.txt plus pytest, so the agent
+        # can run the test suite to verify any fix.
+        run: pip install -r requirements-dev.txt
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Diagnose and propose fix
+        uses: anthropics/claude-code-action@v1
+        env:
+          # Make `gh` usable from the agent's bash for reading run logs and opening the PR.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          claude_args: "--model claude-sonnet-4-6 --max-turns 30"
+          prompt: |
+            The "OLX motorcycle alert" pipeline (.github/workflows/check.yml) just
+            failed. The failed run ID is ${{ github.event.workflow_run.id }} and its
+            page is ${{ github.event.workflow_run.html_url }}.
+
+            Your job: diagnose the failure and, only if it is a real code bug, open
+            a review-only pull request with a verified minimal fix. Work on the code
+            currently checked out (the repo's default branch).
+
+            Steps:
+
+            1. Gather context. Fetch the failed run's logs:
+                 gh run view ${{ github.event.workflow_run.id }} --log-failed
+               (fall back to `--log` if needed). Read the relevant source —
+               primarily olx.py and main.py, plus state.py / notifier.py / config.yaml
+               if the logs point there.
+
+            2. Classify the failure:
+               - TRANSIENT — a network error, DNS failure, timeout, or an OLX
+                 5xx / rate-limit response. These are not code defects.
+               - REAL CODE BUG — a parse error, AttributeError/None handling, an
+                 import/dependency break, or a config/logic mismatch.
+               When genuinely uncertain, treat it as a real code bug and open a PR
+               (biased toward surfacing, not silence).
+
+            3. If TRANSIENT: take NO action. Do not change any files, do not open a
+               PR, and do not post any comment or notification. The next scheduled
+               run (every 4 hours) will self-heal. Simply stop and explain that you
+               classified it as transient.
+
+            4. If REAL CODE BUG:
+               a. Make the MINIMAL change needed to fix the root cause. Do not
+                  refactor unrelated code.
+               b. Verify by running: pytest
+                  Capture whether it passed.
+               c. Create a branch named exactly: watchdog/fix-${{ github.event.workflow_run.id }}
+                  Commit your change to it and push it.
+               d. Open a pull request targeting the default branch with:
+                    gh pr create \
+                      --base main \
+                      --head watchdog/fix-${{ github.event.workflow_run.id }} \
+                      --title "<concise root-cause summary>" \
+                      --assignee edwinstraub \
+                      --body "<body described below>"
+                  The PR body MUST contain, in order:
+                    - A heading line that @mentions the owner: "@edwinstraub — the
+                      OLX pipeline failed; here is a proposed fix."
+                    - Root cause: what broke and why (cite the log evidence).
+                    - Change: what you modified and why it is minimal.
+                    - Verification: state HONESTLY whether `pytest` passed. If tests
+                      passed, say "Verified: pytest green." If tests still fail, or no
+                      test covers the fixed path, say so explicitly and add
+                      "⚠️ Unverified — needs manual review."
+                    - A link to the failed run: ${{ github.event.workflow_run.html_url }}
+
+            Hard constraints:
+            - NEVER push to or modify the main branch directly.
+            - NEVER merge the PR or enable auto-merge. It is review-only.
+            - Open at most ONE pull request for this failure.

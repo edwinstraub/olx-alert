@@ -50,6 +50,7 @@ repository secret**. Add:
 |--------|-------|
 | `SMTP_USER` | Your Gmail address (e.g. `you@gmail.com`) |
 | `SMTP_PASS` | The 16-character Gmail App Password |
+| `ANTHROPIC_API_KEY` | Claude API key — only needed for the optional [pipeline watchdog](#pipeline-watchdog-auto-diagnose-on-failure) |
 
 These are never committed; the recipient address lives in `config.yaml`.
 
@@ -64,6 +65,25 @@ You can also trigger it manually from the **Actions** tab ("Run workflow").
 as "seen" so you aren't spammed with the entire back-catalogue of existing
 listings. Real notifications begin on the **second** run, for listings that
 appear after the bootstrap. This is by design.
+
+## Pipeline watchdog (auto-diagnose on failure)
+
+If the scheduled `check.yml` run ever fails — most often because OLX changed
+their HTML and broke parsing in `olx.py` — the watchdog in
+`.github/workflows/watchdog.yml` reacts automatically:
+
+1. It triggers on a failed "OLX motorcycle alert" run and runs Claude
+   (`anthropics/claude-code-action`) to read the failed run's logs.
+2. **Transient failures** (network blip, timeout, OLX 5xx) are left alone — the
+   next scheduled run self-heals, so you aren't pinged for noise.
+3. **Real code bugs** get a minimal fix, verified with `pytest`, pushed to a
+   `watchdog/fix-<run_id>` branch and opened as a **pull request** that
+   @mentions and assigns you.
+
+Nothing is ever pushed to `main` or auto-merged — every fix waits for your
+review. The only setup it needs is the `ANTHROPIC_API_KEY` secret from the
+[Add GitHub Secrets](#3-add-github-secrets) step. To disable it, delete
+`.github/workflows/watchdog.yml`.
 
 ## Changing the check frequency
 
