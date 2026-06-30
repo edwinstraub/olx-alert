@@ -49,6 +49,15 @@ secret. Confirmed current input surface (v1 GA):
 - *Alternative considered:* an out-of-repo scheduled cloud agent polling for failed
   runs. Rejected — more moving parts and latency; in-CI is simpler and event-driven.
 
+**Tool permissions: `--allowedTools "Bash,Edit,Write,Read,Glob,Grep"`.**
+`claude-code-action` denies arbitrary Bash by default ("Claude does not have access
+to execute arbitrary Bash commands by default… you must explicitly allow them" —
+action configuration docs). The first live test failed with `error_max_turns` and
+`permission_denials_count: 20` because the agent could not run `gh`, `pytest`, or
+`git`. Bash is allowed broadly rather than per-command-scoped (`Bash(gh:*)` etc.)
+because the agent also needs ordinary helpers (`cat`, `cd`, …) and this is trusted
+CI acting on its own repo.
+
 **Model: `claude-sonnet-4-6` via `claude_args`.**
 Sonnet is the cost-appropriate default for log triage + a minimal scraper fix.
 Passed as `--model claude-sonnet-4-6`; can be raised to Opus later if fixes prove

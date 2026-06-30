@@ -14,7 +14,7 @@
 
 ## 3. Agent step
 
-- [x] 3.1 Add the `anthropics/claude-code-action@v1` step with `anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}` and `claude_args: "--model claude-sonnet-4-6 --max-turns 30"` (raised from 8 — diagnose→fix→test→PR needs more turns)
+- [x] 3.1 Add the `anthropics/claude-code-action@v1` step with `anthropic_api_key`, `--model claude-sonnet-4-6 --max-turns 30`, and `--allowedTools "Bash,Edit,Write,Read,Glob,Grep"` (Bash is denied by default — first live test failed with 20 permission denials without it)
 - [x] 3.2 Write the `prompt:` input: fetch logs via `gh run view ${{ github.event.workflow_run.id }} --log-failed`, read `olx.py`/`main.py`
 - [x] 3.3 Prompt the agent to classify transient vs. real code bug, biasing toward a PR when uncertain
 - [x] 3.4 Prompt: on transient → exit with no PR and no notification

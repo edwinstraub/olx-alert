@@ -49,7 +49,14 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          claude_args: "--model claude-sonnet-4-6 --max-turns 30"
+          # claude-code-action denies arbitrary Bash by default, so the agent must
+          # be granted the tools it needs: shell (gh/pytest/git) and file edits.
+          # Bash is allowed broadly — this is trusted CI acting on its own repo,
+          # and per-command scoping would deny ordinary helpers like cat/cd.
+          claude_args: |
+            --allowedTools "Bash,Edit,Write,Read,Glob,Grep"
+            --model claude-sonnet-4-6
+            --max-turns 30
           prompt: |
             The "OLX motorcycle alert" pipeline (.github/workflows/check.yml) just
             failed. The failed run ID is ${{ github.event.workflow_run.id }} and its
