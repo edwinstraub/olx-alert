@@ -17,13 +17,20 @@ from bs4 import BeautifulSoup
 # OLX listing URLs end in ``-ID<alphanumeric>.html``.
 _ID_RE = re.compile(r"-ID([A-Za-z0-9]+)\.html")
 
-# OLX returns 403 for unfamiliar clients; present a browser-like User-Agent.
+# OLX returns 403 for unfamiliar clients; present browser-like headers.
+# Version must be a 4-part string (e.g. 138.0.0.0) and kept reasonably
+# current — OLX's bot-detection rejects stale or malformed UA strings.
 _HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+        "(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+    ),
+    "Accept": (
+        "text/html,application/xhtml+xml,application/xml;q=0.9,"
+        "image/avif,image/webp,*/*;q=0.8"
     ),
     "Accept-Language": "ro-RO,ro;q=0.9,en;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br",
 }
 
 _TIMEOUT = 20
