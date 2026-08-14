@@ -18,12 +18,26 @@ from bs4 import BeautifulSoup
 _ID_RE = re.compile(r"-ID([A-Za-z0-9]+)\.html")
 
 # OLX returns 403 for unfamiliar clients; present a browser-like User-Agent.
+# Include sec-ch-ua client hints, which Chrome sends since v69 and whose
+# absence is a reliable bot signal to modern detection systems.
 _HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+        "(KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+    ),
+    "Accept": (
+        "text/html,application/xhtml+xml,application/xml;q=0.9,"
+        "image/avif,image/webp,image/apng,*/*;q=0.8"
     ),
     "Accept-Language": "ro-RO,ro;q=0.9,en;q=0.8",
+    "sec-ch-ua": '"Chromium";v="137", "Google Chrome";v="137", "Not=A?Brand";v="24"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "Upgrade-Insecure-Requests": "1",
 }
 
 _TIMEOUT = 20
