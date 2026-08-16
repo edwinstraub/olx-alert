@@ -18,12 +18,18 @@ from bs4 import BeautifulSoup
 _ID_RE = re.compile(r"-ID([A-Za-z0-9]+)\.html")
 
 # OLX returns 403 for unfamiliar clients; present a browser-like User-Agent.
+# Accept / Accept-Encoding are also checked by bot-detection and must be present.
 _HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+        "(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+    ),
+    "Accept": (
+        "text/html,application/xhtml+xml,application/xml;q=0.9,"
+        "image/avif,image/webp,image/apng,*/*;q=0.8"
     ),
     "Accept-Language": "ro-RO,ro;q=0.9,en;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br",
 }
 
 _TIMEOUT = 20
