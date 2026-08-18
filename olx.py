@@ -17,7 +17,9 @@ from bs4 import BeautifulSoup
 # OLX listing URLs end in ``-ID<alphanumeric>.html``.
 _ID_RE = re.compile(r"-ID([A-Za-z0-9]+)\.html")
 
-# OLX returns 403 for unfamiliar clients; present a browser-like User-Agent.
+# OLX returns 403 for unfamiliar clients; present a browser-like fingerprint.
+# Sec-Fetch-* headers are sent by Chrome on every top-level navigation and
+# are a primary signal used by modern bot-detection systems.
 _HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -25,6 +27,11 @@ _HEADERS = {
     ),
     "Accept-Language": "ro-RO,ro;q=0.9,en;q=0.8",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
 }
 
 _TIMEOUT = 20
