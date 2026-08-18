@@ -25,6 +25,13 @@ _HEADERS = {
     ),
     "Accept-Language": "ro-RO,ro;q=0.9,en;q=0.8",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    # Anti-bot systems treat absent Sec-Fetch-* headers as a non-browser signal.
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "Upgrade-Insecure-Requests": "1",
+    "Cache-Control": "max-age=0",
 }
 
 _TIMEOUT = 20
