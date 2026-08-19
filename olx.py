@@ -11,7 +11,7 @@ import json
 import re
 from dataclasses import dataclass
 
-import requests
+from curl_cffi import requests
 from bs4 import BeautifulSoup
 
 # OLX listing URLs end in ``-ID<alphanumeric>.html``.
@@ -158,7 +158,7 @@ def _text(node) -> str:
 
 def _http_get(url: str):
     """Perform the HTTP GET. Separated so tests can substitute it."""
-    return requests.get(url, headers=_HEADERS, timeout=_TIMEOUT)
+    return requests.get(url, headers=_HEADERS, timeout=_TIMEOUT, impersonate="chrome")
 
 
 def fetch_listings(search_url: str) -> list[Listing]:
