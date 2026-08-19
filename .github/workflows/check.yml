@@ -1,11 +1,13 @@
 name: OLX motorcycle alert
 
 on:
-  schedule:
-    # Single source of truth for check frequency. Default: every 4 hours.
-    # Note: GitHub Actions cron has ~5-minute minimum granularity and may be
-    # delayed several minutes under load — acceptable for marketplace polling.
-    - cron: "0 */4 * * *"
+  # Scheduled polling is disabled — this workflow now only runs on manual
+  # dispatch. Re-enable by uncommenting the schedule block below.
+  # schedule:
+  #   # Single source of truth for check frequency. Default: every 4 hours.
+  #   # Note: GitHub Actions cron has ~5-minute minimum granularity and may be
+  #   # delayed several minutes under load — acceptable for marketplace polling.
+  #   - cron: "0 */4 * * *"
   workflow_dispatch: {}
 
 # Serialize runs so two jobs never race on state/seen.json.
